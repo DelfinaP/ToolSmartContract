@@ -1,17 +1,21 @@
 package tool;
 
-import org.apache.commons.io.FileUtils;
+//import org.apache.commons.io.FileUtils;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Csv {
 
     static String contractAddress = "";
-    static String[] contractAddresses = null;
+    static ArrayList<String> contractAddresses = new ArrayList<String>();
 
-    public static void getContractAddress() {
+    public static ArrayList<String> getContractAddresses() {
 
-        String fileName = "..\\smart-contract\\src\\\\dates\\csv_disponibili.csv";
+        String fileName = "..\\smart-contract\\src\\dates\\csv_disponibili.csv";
         File file = new File(fileName);
 
         try {
@@ -22,46 +26,24 @@ public class Csv {
                 String data = inputStream.next();
                 String[] values = data.split(",");
                 contractAddress = values[1];
-                contractAddresses = ArrayUtils.add(contractAddresses, contractAddress);
+                //System.out.println(contractAddress);
+                contractAddresses.add(contractAddress);
             }
         }catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+        return contractAddresses;
+    }
 
-        /*String path = "..\\smart-contract\\src\\dates\\csv_disponibili.csv";
-        String line = "";
-        int i = 0;
+    public static  void createDir(){
+       String basePath = "..\\smart-contract\\src\\source_code";
 
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(path));
+        getContractAddresses();
 
-            while ((line = br.readLine()) != null){
-
-                //System.out.println(line);
-                String[] row = line.split(",");
-                contractAddress = row[1];
-
-                System.out.println(row[1]);
-
-                *//*for (String index : row){
-                    contractAddresses[i] = contractAddress;
-                }
-
-                System.out.println(contractAddresses[i]);*//*
-
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        contractAddresses.forEach(contractAddressElement -> {
+            new File(basePath, contractAddressElement).mkdir();
+        });
 
 
-
-        //public static void createDir(){
-
-        //for (int i = 1; i < getContractAddress(); i++){
-            //System.out.println(getContractAddress());
-       // }
     }
 }

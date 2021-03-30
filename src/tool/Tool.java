@@ -5,6 +5,7 @@ public class Tool {
 
     public void run(){
 
-        Csv.getContractAddress();
+//        Csv.getContractAddresses();
+        Csv.createDir();
     }
 }
