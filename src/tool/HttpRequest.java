@@ -1,14 +1,12 @@
 package tool;
 
-import jdk.nashorn.internal.parser.JSONParser;
-import netscape.javascript.JSObject;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import library.org.json.*;
+import utils.JsonUtils;
 
 public class HttpRequest {
 
@@ -17,7 +15,9 @@ public class HttpRequest {
 
     public static void sendGetRequest() {
 
-        String apiKey = "J8UVM1FKFHJZXPXXHEKHHX65TK5EU3JXTN";
+        String apiKey = utils.JsonUtils.getApiKey();
+
+        //address di prova
         String address = "0x7E9D8f07A64e363e97A648904a89fb4cd5fB94CD";
 
         Csv.getContractAddresses().forEach(contractAddressElement -> {
