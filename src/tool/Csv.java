@@ -1,10 +1,6 @@
 package tool;
 
-//import org.apache.commons.io.FileUtils;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -13,6 +9,7 @@ public class Csv {
     static String contractAddress = "";
     static ArrayList<String> contractAddresses = new ArrayList<String>();
 
+    //legge il csv e ci restituisce un arrayList di contratti
     public static ArrayList<String> getContractAddresses() {
 
         String fileName = "..\\smart-contract\\src\\dates\\csv_disponibili.csv";
@@ -35,6 +32,7 @@ public class Csv {
         return contractAddresses;
     }
 
+    //per ogni contratto crea una cartella
     public static  void createDir(){
        String basePath = "..\\smart-contract\\src\\source_code";
 
@@ -43,7 +41,5 @@ public class Csv {
         contractAddresses.forEach(contractAddressElement -> {
             new File(basePath, contractAddressElement).mkdir();
         });
-
-
     }
 }
