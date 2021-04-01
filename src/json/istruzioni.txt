@@ -1,0 +1,3 @@
+Per utilizzare le ApiKey personali, creare una copia di "parametri-template.json" chiamarla "parametri.json",
+dopodichè modificare il campo ApiKey con la propria presente nell'area riservata di Etherscan.
+Inserire nel gitignore il nome_file "parametri.json" per non tener traccia del file personale
