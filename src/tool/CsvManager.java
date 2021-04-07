@@ -4,13 +4,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Csv {
+public class CsvManager {
 
     static String contractAddress = "";
     static ArrayList<String> contractAddresses = new ArrayList<String>();
 
+    public CsvManager() {
+    }
+
     //legge il csv e ci restituisce un arrayList di contratti
-    public static ArrayList<String> getContractAddresses() {
+    public ArrayList<String> getContractAddresses() {
 
         String fileName = "..\\smart-contract\\src\\dates\\csv_disponibili.csv";
         File file = new File(fileName);
@@ -33,7 +36,8 @@ public class Csv {
     }
 
     //per ogni contratto crea una cartella
-    public static  void createDir(){
+
+    private void createDir(){
        String basePath = "..\\smart-contract\\src\\source_code";
 
         getContractAddresses();
