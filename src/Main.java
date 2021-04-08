@@ -9,6 +9,7 @@ public class Main {
        // sourceCodeManager.sendGetRequest();
 
         SolcManager solcManager = new SolcManager();
-        solcManager.listFilesForFolder();
+            solcManager.listFilesForFolder();
+
     }
 }
