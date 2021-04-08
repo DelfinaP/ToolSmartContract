@@ -9,7 +9,22 @@ public class SolcManager {
 
     public SolcManager() {
     }
+    private static String getFileNameWithoutExtension(File file) {
+        String fileName = "";
 
+        try {
+            if (file != null && file.exists()) {
+                String name = file.getName();
+                fileName = name.replaceFirst("[.][^.]+$", "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            fileName = "";
+        }
+
+        return fileName;
+
+    }
     public void listFilesForFolder() {
         File folder = new File(sourceCodesPath);
 
@@ -19,12 +34,18 @@ public class SolcManager {
 
                 String fileName = fileEntry.getName();
 
+
                if(fileCanBeRead(fileName)){
 
-                   System.out.println(getSolVersion(fileName));
+                  String fileNameWithoutExtension =  getFileNameWithoutExtension(fileEntry);
 
+                   try {
+
+                       createByteCode(getSolVersion(fileName), fileNameWithoutExtension);
+                   } catch (InterruptedException e) {
+                       e.printStackTrace();
+                   }
                }
-
             }
         }
     }
@@ -51,13 +72,16 @@ public class SolcManager {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            return occourrences > 1;
+            return occourrences <= 1;
         }
     }
 
     public String getSolVersion(String fileName) {
         Scanner fScn = null;
+        String unFormattedVersion = "";
         String version = "";
+
+        StringBuilder stringBuilder;
 
         try {
 
@@ -74,18 +98,26 @@ public class SolcManager {
                         String c = "";
                         int i = data.length() - 2;
 
-                        while (!c.equals("^")) {
+                        boolean stopChar = true;
 
+                        while (stopChar) {
                             c = String.valueOf(data.charAt(i));
                             i--;
+                            if (c.equals("^") || c.equals("<") || c.equals(" ")) {
+                            //if (c.equals("^")){
+                                stopChar = false;
 
-                            if (!c.equals("^"))
-                                version += c;
+                            } else {
+                                //if (!c.equals("^"))
+                                unFormattedVersion += c;
+                                //System.out.println(unFormattedVersion);
+                            }
                         }
                     }
-                    return new StringBuilder(version).reverse().toString();
+                    stringBuilder = new StringBuilder(unFormattedVersion);
+                    version = stringBuilder.reverse().toString();
+                    return version;
                 }
-
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -93,25 +125,53 @@ public class SolcManager {
         return null;
     }
 
-    public void prova() {
+    public void  createByteCode(String currentVersion, String currentContractAddress) throws InterruptedException {
 
         try {
+            System.out.println( currentContractAddress);
+           // Process process = Runtime.getRuntime().exec("powershell /c svm install 0.4.24 | svm use 0.4.24 | solc --bin ..\\smart-contract\\src\\source_code\\0x3f7904f4ac4d002277f55ba5c24fd24b1b51aa15.sol > output.txt ");
+            Process process;
 
-            Process process = Runtime.getRuntime().exec("powershell /c svm install 0.6.12 | svm use 0.6.12 | solc --bin ..\\smart-contract\\src\\source_code\\0x0d24914029f017c8e3f5903b466c8f4fe3ff29d0.sol > output.txt ");
-            // Process process = Runtime.getRuntime().exec("powershell /c dir | mkdir file");
+            process = Runtime.getRuntime().exec("powershell /c svm install " + currentVersion);
+//            process = Runtime.getRuntime().exec("powershell /c svm install 0.6.12");
+            process.waitFor();
+            //printResults(process);
+            //printErrors(process);
 
-            printResults(process);
+
+            process = Runtime.getRuntime().exec("powershell /c svm use " + currentVersion);
+            process.waitFor();
+            //printResults(process);
+
+            process = Runtime.getRuntime().exec("powershell /c solc --bin ..\\smart-contract\\src\\source_code\\" + currentContractAddress + "  > ..\\smart-contract\\src\\bytecode\\" + currentContractAddress + ".txt");
+            process.waitFor();
+            //printResults(process);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void printResults(Process process) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        //System.out.println(reader);
         String line = "";
+        String lines = "";
         while ((line = reader.readLine()) != null) {
-            System.out.println(line);
+            lines += line;
         }
+        System.out.println(lines);
+    }
+
+    public static void printErrors(Process process) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        //System.out.println(reader);
+        String line = "";
+        String lines = "";
+        while ((line = reader.readLine()) != null) {
+            lines += line;
+        }
+        System.out.println(lines);
     }
 }
 
