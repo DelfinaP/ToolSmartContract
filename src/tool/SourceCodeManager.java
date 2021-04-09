@@ -6,8 +6,11 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import library.org.json.*;
+import utils.JsonUtils;
 
 public class SourceCodeManager {
+
+    String sourceCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "source_codes_path");
 
     private HttpURLConnection connection;
     private CsvManager csvManager = new CsvManager();
@@ -63,7 +66,7 @@ public class SourceCodeManager {
 
     private void writeFileSol(String contractAddress, String jKey) {
 
-            String path = "..\\smart-contract\\src\\source_code\\" + contractAddress + ".sol";
+            String path = sourceCodesPath + contractAddress + ".sol";
             File file = new File(path);
             FileWriter fw = null;
             try {

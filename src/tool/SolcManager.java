@@ -1,11 +1,15 @@
 package tool;
 
+import utils.JsonUtils;
+
 import java.io.*;
 import java.util.Scanner;
 
 public class SolcManager {
 
-    String sourceCodesPath = "..\\smart-contract\\src\\source_code\\";
+    String sourceCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "source_codes_path");
+    String bytecodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "bytecodes_path");
+    String opCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "opcodes_path");
 
     public SolcManager() {
     }
@@ -41,7 +45,7 @@ public class SolcManager {
 
                    try {
 
-                       createByteCode(getSolVersion(fileName), fileNameWithoutExtension);
+                       createByteCodeAndOpCode(getSolVersion(fileName), fileNameWithoutExtension);
                    } catch (InterruptedException e) {
                        e.printStackTrace();
                    }
@@ -54,7 +58,7 @@ public class SolcManager {
         Scanner fScn = null;
         int occourrences = 0;
 
-        System.out.println(fileName);
+        //System.out.println(fileName);
 
         try {
 
@@ -125,7 +129,7 @@ public class SolcManager {
         return null;
     }
 
-    public void  createByteCode(String currentVersion, String currentContractAddress) throws InterruptedException {
+    public void createByteCodeAndOpCode(String currentVersion, String currentContractAddress) throws InterruptedException {
 
         try {
             System.out.println( currentContractAddress);
@@ -135,18 +139,29 @@ public class SolcManager {
             process = Runtime.getRuntime().exec("powershell /c svm install " + currentVersion);
 //            process = Runtime.getRuntime().exec("powershell /c svm install 0.6.12");
             process.waitFor();
-            //printResults(process);
-            //printErrors(process);
+            printResults(process);
+            printErrors(process);
 
 
             process = Runtime.getRuntime().exec("powershell /c svm use " + currentVersion);
             process.waitFor();
-            //printResults(process);
+            printResults(process);
+            printErrors(process);
 
-            process = Runtime.getRuntime().exec("powershell /c solc --bin ..\\smart-contract\\src\\source_code\\" + currentContractAddress + "  > ..\\smart-contract\\src\\bytecode\\" + currentContractAddress + ".txt");
+            //process = Runtime.getRuntime().exec("powershell /c solc --bin ..\\smart-contract\\src\\source_code\\" + currentContractAddress + ".sol  > ..\\smart-contract\\src\\bytecode\\" + currentContractAddress + ".txt");
+            process = Runtime.getRuntime().exec("powershell /c solc --bin " + sourceCodesPath + currentContractAddress + ".sol  > " + bytecodesPath + currentContractAddress + ".txt");
+
             process.waitFor();
-            //printResults(process);
-            
+            printResults(process);
+            printErrors(process);
+
+            //process = Runtime.getRuntime().exec("powershell /c solc --opcodes " + sourceCodesPath + currentContractAddress + ".sol  > ..\\smart-contract\\src\\opcode\\" + currentContractAddress + ".txt");
+            process = Runtime.getRuntime().exec("powershell /c solc --opcodes " + sourceCodesPath + currentContractAddress + ".sol  > " + opCodesPath + currentContractAddress + ".txt");
+
+            process.waitFor();
+            printResults(process);
+            printErrors(process);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

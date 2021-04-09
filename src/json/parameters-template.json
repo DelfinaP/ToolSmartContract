@@ -1,5 +1,8 @@
 {
   "parametri" : {
-    "ApiKey" : ""
+    "ApiKey" : "",
+    "source_codes_path" : "..\\smart-contract\\src\\source_code\\",
+    "bytecodes_path" : "..\\smart-contract\\src\\bytecode\\",
+    "opcodes_path" : "..\\smart-contract\\src\\opcode\\"
   }
 }
