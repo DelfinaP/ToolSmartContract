@@ -3,6 +3,8 @@
     "ApiKey" : "",
     "source_codes_path" : "..\\smart-contract\\src\\source_code\\",
     "bytecodes_path" : "..\\smart-contract\\src\\bytecode\\",
-    "opcodes_path" : "..\\smart-contract\\src\\opcode\\"
+    "opcodes_path" : "..\\smart-contract\\src\\opcode\\",
+    "ccs_path" : "..\\smart-contract\\src\\ccs"
+
   }
 }

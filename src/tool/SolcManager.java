@@ -38,7 +38,7 @@ public class SolcManager {
 
                 String fileName = fileEntry.getName();
 
-
+//              System.out.println(fileName);
                if(fileCanBeRead(fileName)){
 
                   String fileNameWithoutExtension =  getFileNameWithoutExtension(fileEntry);
@@ -67,7 +67,7 @@ public class SolcManager {
             while (fScn.hasNextLine()) {
 
                 String data = fScn.nextLine();
-
+                //System.out.println("questo: "+ data);
                 if (data.contains("pragma solidity")) {
 
                     occourrences++;
