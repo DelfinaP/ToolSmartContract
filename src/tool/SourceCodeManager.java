@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import library.org.json.*;
+import utils.FileUtils;
 import utils.JsonUtils;
 
 public class SourceCodeManager {
@@ -46,7 +47,8 @@ public class SourceCodeManager {
 
                     String jKey = getSourceCode(response);
 
-                    writeFileSol(contractAddressElement, jKey);
+                    String path = sourceCodesPath + contractAddressElement + ".sol";
+                    FileUtils.writeFileSol(contractAddressElement, jKey, path);
 
                 } else {
                     System.out.println("Errore");
@@ -62,21 +64,6 @@ public class SourceCodeManager {
             }
         });
 
-    }
-
-    private void writeFileSol(String contractAddress, String jKey) {
-
-            String path = sourceCodesPath + contractAddress + ".sol";
-            File file = new File(path);
-            FileWriter fw = null;
-            try {
-                fw = new FileWriter(file);
-                fw.write(jKey);
-                fw.flush();
-                fw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
     }
 
     private String getSourceCode(JSONObject jsonObject){

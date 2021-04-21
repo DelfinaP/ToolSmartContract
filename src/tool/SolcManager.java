@@ -1,5 +1,6 @@
 package tool;
 
+import utils.FileUtils;
 import utils.JsonUtils;
 
 import java.io.*;
@@ -13,22 +14,8 @@ public class SolcManager {
 
     public SolcManager() {
     }
-    private static String getFileNameWithoutExtension(File file) {
-        String fileName = "";
 
-        try {
-            if (file != null && file.exists()) {
-                String name = file.getName();
-                fileName = name.replaceFirst("[.][^.]+$", "");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            fileName = "";
-        }
 
-        return fileName;
-
-    }
     public void listFilesForFolder() {
         File folder = new File(sourceCodesPath);
 
@@ -41,7 +28,7 @@ public class SolcManager {
 //              System.out.println(fileName);
                if(fileCanBeRead(fileName)){
 
-                  String fileNameWithoutExtension =  getFileNameWithoutExtension(fileEntry);
+                  String fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileEntry);
 
                    try {
 

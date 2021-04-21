@@ -1,5 +1,6 @@
 package tool;
 
+import utils.FileUtils;
 import utils.JsonUtils;
 
 import java.io.*;
@@ -10,8 +11,9 @@ import java.util.Scanner;
 public class CcsManager {
 
     String opCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "opcodes_path");
+    String ccsPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "ccs_path");
 
-    String fileName = "0x1B4a86c26b2997629e934d8Ca3941bcB9F39c838.txt";
+    //String fileName = "0x1B4a86c26b2997629e934d8Ca3941bcB9F39c838.txt";
 
     public CcsManager() {
     }
@@ -25,14 +27,15 @@ public class CcsManager {
 
                 String fileName = fileEntry.getName();
                 readOpcodeOperation(fileName);
+
             }
         }
     }
 
-    public ArrayList<ArrayList> readOpcodeOperation(String fileName) {
+    public void readOpcodeOperation(String fileName) {
         String st = "";
         Boolean lineContainsOperations = false;
-        ArrayList<ArrayList> allOperationsSections = new ArrayList<>();
+        ArrayList<ArrayList> allOperationsSections = new ArrayList<ArrayList>();
         ArrayList<String> allOperations = new ArrayList<String>();
 
         try {
@@ -66,7 +69,7 @@ public class CcsManager {
 
 //                System.out.println(allOperations);
             for (int i = 0; i < allOperationsSections.size(); i++) {
-                System.out.println(allOperationsSections.get(i));
+                //System.out.println(allOperationsSections.get(i));
             }
 
         } catch (FileNotFoundException e) {
@@ -76,10 +79,34 @@ public class CcsManager {
             e.printStackTrace();
         }
 
-        return allOperationsSections;
+        createFileCcs(allOperationsSections, fileName);
     }
 
-    private void createFileCcs(){
+    private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName){
 
+        String path = ccsPath + fileName.replaceFirst("[.][^.]+$", "") + ".ccs";
+        String a ="";
+
+        for (int i=0; i < arrayList.size(); i++){
+            for (int j = 0; j < arrayList.get(i).size(); j++){
+
+                if (j == arrayList.get(i).size()-1){
+                    //System.out.println("p" + j + "=" + arrayList.get(i).get(j) + ".nil");
+                    a += "p" + j + "=" + arrayList.get(i).get(j) + ".nil"+"\n"+"\n";
+                } else{
+                    int z=j+1;
+                    a +="p" + j + "=" + arrayList.get(i).get(j) + ".p" + z+"\n";
+                }
+
+
+
+            }
+
+            FileUtils.writeFile(a, path);
+
+
+
+        }
     }
+
 }
