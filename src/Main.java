@@ -1,15 +1,15 @@
 import tool.CcsManager;
-import utils.JsonUtils;
+import tool.SolcManager;
+import tool.SourceCodeManager;
 
-import java.io.File;
 
 public class Main {
 
     public static void main(String[] args) {
-        String opCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "opcodes_path");
 
-        //SourceCodeManager sourceCodeManager = new SourceCodeManager();
-        //sourceCodeManager.sendGetRequest();
+
+        SourceCodeManager sourceCodeManager = new SourceCodeManager();
+        sourceCodeManager.sendGetRequest();
 
         //SolcManager solcManager = new SolcManager();
         //solcManager.listFilesForFolder();
