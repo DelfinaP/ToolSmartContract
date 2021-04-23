@@ -3,6 +3,7 @@ package tool;
 import utils.FileUtils;
 import utils.JsonUtils;
 
+import javax.sound.midi.SysexMessage;
 import java.io.*;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class CcsManager {
     String opCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "opcodes_path");
     String ccsPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "ccs_path");
 
-    //String fileName = "0x1B4a86c26b2997629e934d8Ca3941bcB9F39c838.txt";
+    String fileName = "0x00fbd1774093e9240beb559f7a1300d291d86309prova.txt";
 
     public CcsManager() {
     }
@@ -27,7 +28,6 @@ public class CcsManager {
 
                 String fileName = fileEntry.getName();
                 readOpcodeOperation(fileName);
-
             }
         }
     }
@@ -57,7 +57,6 @@ public class CcsManager {
                     }
                     allOperationsSections.add(new ArrayList<>(allOperations));
                     allOperations.clear();
-
                 }
 
                 if (st.contains("Opcodes:")) {
@@ -82,31 +81,36 @@ public class CcsManager {
         createFileCcs(allOperationsSections, fileName);
     }
 
-    private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName){
+    private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName) {
 
         String path = ccsPath + fileName.replaceFirst("[.][^.]+$", "") + ".ccs";
-        String a ="";
+        String process = "";
+        int b = 1;
 
-        for (int i=0; i < arrayList.size(); i++){
-            for (int j = 0; j < arrayList.get(i).size(); j++){
+        ArrayList<String> procAll = new ArrayList<String>();
 
-                if (j == arrayList.get(i).size()-1){
+        for (int i = 0; i < arrayList.size(); i++) {
+            for (int j = 0; j < arrayList.get(i).size(); j++) {
+
+                if (j == arrayList.get(i).size() - 1) {
                     //System.out.println("p" + j + "=" + arrayList.get(i).get(j) + ".nil");
-                    a += "p" + j + "=" + arrayList.get(i).get(j) + ".nil"+"\n"+"\n";
-                } else{
-                    int z=j+1;
-                    a +="p" + j + "=" + arrayList.get(i).get(j) + ".p" + z+"\n";
+                    process += "Proc p" + b + "=" + arrayList.get(i).get(j) + ".nil" + "\n" + "\n";
+                    b++;
+                } else {
+                    int z = b + 1;
+                    process += "Proc p" + b + "=" + arrayList.get(i).get(j) + ".p" + z + "\n";
+                    b++;
                 }
-
-
-
             }
+            procAll.add((String) arrayList.get(i).get(0));
 
-            FileUtils.writeFile(a, path);
+            //todo save in file procAll
 
-
-
+            FileUtils.writeFile(process, "", path);
         }
+        System.out.println(procAll);
     }
 
+
 }
+
