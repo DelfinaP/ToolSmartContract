@@ -135,12 +135,13 @@ public class SolcManager {
             printResults(process);
             printErrors(process);
 
+            //for bytecode
             //process = Runtime.getRuntime().exec("powershell /c solc --bin ..\\smart-contract\\src\\source_code\\" + currentContractAddress + ".sol  > ..\\smart-contract\\src\\bytecode\\" + currentContractAddress + ".txt");
-            process = Runtime.getRuntime().exec("powershell /c solc --bin " + sourceCodesPath + currentContractAddress + ".sol  > " + bytecodesPath + currentContractAddress + ".txt");
-
-            process.waitFor();
-            printResults(process);
-            printErrors(process);
+//            process = Runtime.getRuntime().exec("powershell /c solc --bin " + sourceCodesPath + currentContractAddress + ".sol  > " + bytecodesPath + currentContractAddress + ".txt");
+//
+//            process.waitFor();
+//            printResults(process);
+//            printErrors(process);
 
             //process = Runtime.getRuntime().exec("powershell /c solc --opcodes " + sourceCodesPath + currentContractAddress + ".sol  > ..\\smart-contract\\src\\opcode\\" + currentContractAddress + ".txt");
             process = Runtime.getRuntime().exec("powershell /c solc --opcodes " + sourceCodesPath + currentContractAddress + ".sol  > " + opCodesPath + currentContractAddress + ".txt");

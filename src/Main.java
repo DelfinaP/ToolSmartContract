@@ -16,6 +16,6 @@ public class Main {
 
         CcsManager ccsManager = new CcsManager();
         //ccsManager.listOpcodeFiles();
-        ccsManager.readOpcodeOperation("0x00fbd1774093e9240beb559f7a1300d291d86309prova.txt");
+        ccsManager.readOpcodeOperation("0x102a796eb323c90ea233cf0cf454afa7d0441252.txt");
     }
 }

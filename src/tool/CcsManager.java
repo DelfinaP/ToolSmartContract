@@ -14,7 +14,7 @@ public class CcsManager {
     String opCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "opcodes_path");
     String ccsPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "ccs_path");
 
-    String fileName = "0x00fbd1774093e9240beb559f7a1300d291d86309prova.txt";
+    String fileName = "0x102a796eb323c90ea233cf0cf454afa7d0441252.txt";
 
     public CcsManager() {
     }
@@ -84,10 +84,14 @@ public class CcsManager {
     private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName) {
 
         String path = ccsPath + fileName.replaceFirst("[.][^.]+$", "") + ".ccs";
+
         String process = "";
+
         int b = 1;
 
-        ArrayList<String> procAll = new ArrayList<String>();
+        ArrayList<String> procAllArray = new ArrayList<String>();
+
+        String procAll = "Proc ALL = ";
 
         for (int i = 0; i < arrayList.size(); i++) {
             for (int j = 0; j < arrayList.get(i).size(); j++) {
@@ -102,15 +106,20 @@ public class CcsManager {
                     b++;
                 }
             }
-            procAll.add((String) arrayList.get(i).get(0));
-
-            //todo save in file procAll
-
-            FileUtils.writeFile(process, "", path);
+            procAllArray.add((String) arrayList.get(i).get(0));
         }
-        System.out.println(procAll);
+
+        System.out.println(procAllArray);
+
+        for (int z = 0; z < procAllArray.size(); z++) {
+
+            if (z == procAllArray.size() - 1) {
+                procAll += procAllArray.get(z);
+            } else {
+                procAll += procAllArray.get(z) + " + ";
+            }
+        }
+        FileUtils.writeFile(process, procAll, path);
     }
-
-
 }
 
