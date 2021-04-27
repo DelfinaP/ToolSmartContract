@@ -8,14 +8,14 @@ public class Main {
     public static void main(String[] args) {
 
 
-        //SourceCodeManager sourceCodeManager = new SourceCodeManager();
-        //sourceCodeManager.sendGetRequest();
+       // SourceCodeManager sourceCodeManager = new SourceCodeManager();
+       // sourceCodeManager.sendGetRequest();
 
-        //SolcManager solcManager = new SolcManager();
-        //solcManager.listFilesForFolder();
+        SolcManager solcManager = new SolcManager();
+        solcManager.listFilesForFolder();
 
-        CcsManager ccsManager = new CcsManager();
+        //CcsManager ccsManager = new CcsManager();
         //ccsManager.listOpcodeFiles();
-        ccsManager.readOpcodeOperation("0x102a796eb323c90ea233cf0cf454afa7d0441252.txt");
+      //  ccsManager.readOpcodeOperation("0x102a796eb323c90ea233cf0cf454afa7d0441252.txt");
     }
 }
