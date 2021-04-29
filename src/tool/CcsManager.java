@@ -14,7 +14,7 @@ public class CcsManager {
     String opCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "opcodes_path");
     String ccsPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "ccs_path");
 
-    String fileName = "0x102a796eb323c90ea233cf0cf454afa7d0441252.txt";
+    //String fileName = "0x102a796eb323c90ea233cf0cf454afa7d0441252.txt";
 
     public CcsManager() {
     }

@@ -5,20 +5,20 @@ import utils.JsonUtils;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class SolcManager {
 
-    String sourceCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "source_codes_path");
-    String bytecodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "bytecodes_path");
-    String opCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "opcodes_path");
+
 
     public SolcManager() {
     }
 
 
-    public void listFilesForFolder() {
-        File folder = new File(sourceCodesPath);
+    public void listFilesForFolder(String path, String path1) {
+        File folder = new File(path);
 
         for (File fileEntry : folder.listFiles()) {
 
@@ -33,16 +33,40 @@ public class SolcManager {
 
                 try {
 
-                    createByteCodeAndOpCode(getSolVersion(getAllSolVersion(fileName)), fileNameWithoutExtension);
+                    createByteCodeAndOpCode(getSolVersion(getAllSolVersion(fileName, path)), fileNameWithoutExtension, path, path1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //}
             }
         }
     }
 
-    public boolean fileCanBeRead(String fileName) {
+    //for file vulnerability
+    public List<File> listFiles(String directoryName) {
+        File directory = new File(directoryName);
+
+        List<File> resultList = new ArrayList<File>();
+
+        // get all the files from a directory
+        File[] fList = directory.listFiles();
+
+        resultList.addAll(Arrays.asList(fList));
+
+        for (File file : fList) {
+            if (file.isFile()) {
+                System.out.println(file.getAbsolutePath());
+
+                System.err.println(file.getParentFile().getName());
+            } else if (file.isDirectory()) {
+
+                resultList.addAll(listFiles(file.getAbsolutePath()));
+            }
+        }
+        System.out.println(resultList);
+        return resultList;
+    }
+
+    public boolean fileCanBeRead(String fileName, String path) {
         Scanner fScn = null;
         int occourrences = 0;
 
@@ -50,7 +74,7 @@ public class SolcManager {
 
         try {
 
-            fScn = new Scanner(new File(sourceCodesPath + fileName));
+            fScn = new Scanner(new File(path + fileName));
 
             while (fScn.hasNextLine()) {
 
@@ -81,24 +105,21 @@ public class SolcManager {
 
         for (int i = 0; i < allVersion.size(); i++) {
             singleVersion = allVersion.get(i).split("\\.");
-            System.out.println(singleVersion[0] + "." +singleVersion[1] + "." +singleVersion[2] );
-
+            System.out.println(singleVersion[0] + "." + singleVersion[1] + "." + singleVersion[2]);
 
             first.add(Integer.valueOf(singleVersion[0]));
             second.add(Integer.valueOf(singleVersion[1]));
             third.add(Integer.valueOf(singleVersion[2]));
-
         }
-
 
         maxFirst = getGreater(first);
 
-        if(maxFirst.getThereIsMax()){
+        if (maxFirst.getThereIsMax()) {
             positionOfMaxVersion = maxFirst.getPosition();
         } else {
 
             maxSecond = getGreater(second);
-            if(maxSecond.getThereIsMax()){
+            if (maxSecond.getThereIsMax()) {
                 positionOfMaxVersion = maxSecond.getPosition();
             } else {
 
@@ -119,16 +140,15 @@ public class SolcManager {
         int max = array.get(0);
         int maxPosition = 0;
 
-        for (int i = 0; i < array.size()-1; i++) {
-            if (array.get(i) > max){
+        for (int i = 0; i < array.size() - 1; i++) {
+            if (array.get(i) > max) {
                 max = array.get(i);
                 maxPosition = i;
-            }
-            else if (array.get(i) == max)
+            } else if (array.get(i) == max)
                 occourences++;
         }
 
-        if(occourences == array.size()-1){
+        if (occourences == array.size() - 1) {
             result.setThereIsMax(false);
             return result;
         }
@@ -138,7 +158,7 @@ public class SolcManager {
         return result;
     }
 
-    public ArrayList<String> getAllSolVersion(String fileName) {
+    public ArrayList<String> getAllSolVersion(String fileName, String path) {
         Scanner fScn = null;
         String unFormattedVersion = "";
         String version = "";
@@ -149,7 +169,7 @@ public class SolcManager {
 
         try {
 
-            fScn = new Scanner(new File(sourceCodesPath + fileName));
+            fScn = new Scanner(new File(path + fileName));
 
             while (fScn.hasNextLine()) {
 
@@ -184,7 +204,6 @@ public class SolcManager {
                     pragmaVersionArray.add(version);
                 }
             }
-
             return pragmaVersionArray;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -192,19 +211,17 @@ public class SolcManager {
         return null;
     }
 
-    public void createByteCodeAndOpCode(String currentVersion, String currentContractAddress) throws InterruptedException {
+    public void createByteCodeAndOpCode(String currentVersion, String currentContractAddress, String path, String path1) throws InterruptedException {
 
         try {
             System.out.println(currentContractAddress);
-            // Process process = Runtime.getRuntime().exec("powershell /c svm install 0.4.24 | svm use 0.4.24 | solc --bin ..\\smart-contract\\src\\source_code\\0x3f7904f4ac4d002277f55ba5c24fd24b1b51aa15.sol > output.txt ");
+
             Process process;
 
             process = Runtime.getRuntime().exec("powershell /c svm install " + currentVersion);
-//            process = Runtime.getRuntime().exec("powershell /c svm install 0.6.12");
             process.waitFor();
             printResults(process);
             printErrors(process);
-
 
             process = Runtime.getRuntime().exec("powershell /c svm use " + currentVersion);
             process.waitFor();
@@ -212,15 +229,12 @@ public class SolcManager {
             printErrors(process);
 
             //for bytecode
-            //process = Runtime.getRuntime().exec("powershell /c solc --bin ..\\smart-contract\\src\\source_code\\" + currentContractAddress + ".sol  > ..\\smart-contract\\src\\bytecode\\" + currentContractAddress + ".txt");
-//            process = Runtime.getRuntime().exec("powershell /c solc --bin " + sourceCodesPath + currentContractAddress + ".sol  > " + bytecodesPath + currentContractAddress + ".txt");
-//
+//            process = Runtime.getRuntime().exec("powershell /c solc --bin " + path + currentContractAddress + ".sol  > " + path1 + currentContractAddress + ".txt");
 //            process.waitFor();
 //            printResults(process);
 //            printErrors(process);
 
-            //process = Runtime.getRuntime().exec("powershell /c solc --opcodes " + sourceCodesPath + currentContractAddress + ".sol  > ..\\smart-contract\\src\\opcode\\" + currentContractAddress + ".txt");
-            process = Runtime.getRuntime().exec("powershell /c solc --opcodes " + sourceCodesPath + currentContractAddress + ".sol  > " + opCodesPath + currentContractAddress + ".txt");
+            process = Runtime.getRuntime().exec("powershell /c solc --opcodes " + path + currentContractAddress + ".sol  > " + path1 + currentContractAddress + ".txt");
 
             process.waitFor();
             printResults(process);
@@ -233,7 +247,7 @@ public class SolcManager {
 
     public static void printResults(Process process) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        //System.out.println(reader);
+
         String line = "";
         String lines = "";
         while ((line = reader.readLine()) != null) {
