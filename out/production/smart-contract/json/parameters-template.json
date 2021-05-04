@@ -5,6 +5,7 @@
     "bytecodes_path" : "..\\smart-contract\\src\\bytecode\\",
     "opcodes_path" : "..\\smart-contract\\src\\opcode\\",
     "ccs_path" : "..\\smart-contract\\src\\ccs\\",
-    "source_codes_vulnerable_path" : "..\\smart-contract\\src\\source_code_vulnerable"
+    "source_codes_vulnerable_path" : "..\\smart-contract\\src\\source_code_vulnerable",
+    "opcodes_vulnerable_path" : "..\\smart-contract\\src\\opcode_vulnerable\\"
   }
 }

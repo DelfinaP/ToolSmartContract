@@ -91,18 +91,18 @@ public class CcsManager {
 
         ArrayList<String> procAllArray = new ArrayList<String>();
 
-        String procAll = "Proc ALL = ";
+        String procAll = "proc ALL = ";
 
         for (int i = 0; i < arrayList.size(); i++) {
             for (int j = 0; j < arrayList.get(i).size(); j++) {
 
                 if (j == arrayList.get(i).size() - 1) {
                     //System.out.println("p" + j + "=" + arrayList.get(i).get(j) + ".nil");
-                    process += "Proc p" + b + "=" + arrayList.get(i).get(j) + ".nil" + "\n" + "\n";
+                    process += "proc p" + b + "=" + arrayList.get(i).get(j) + ".nil" + "\n" + "\n";
                     b++;
                 } else {
                     int z = b + 1;
-                    process += "Proc p" + b + "=" + arrayList.get(i).get(j) + ".p" + z + "\n";
+                    process += "proc p" + b + "=" + arrayList.get(i).get(j) + ".p" + z + "\n";
                     b++;
                 }
             }

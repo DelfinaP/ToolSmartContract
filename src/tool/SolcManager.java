@@ -4,6 +4,9 @@ import utils.FileUtils;
 import utils.JsonUtils;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,11 +14,8 @@ import java.util.Scanner;
 
 public class SolcManager {
 
-
-
     public SolcManager() {
     }
-
 
     public void listFilesForFolder(String path, String path1) {
         File folder = new File(path);
@@ -42,28 +42,28 @@ public class SolcManager {
     }
 
     //for file vulnerability
-    public List<File> listFiles(String directoryName) {
-        File directory = new File(directoryName);
+    public void listFiles(String readPath, String writePath){
+        File directory = new File(readPath);
+        File[] vulnerabilityFolders = directory.listFiles();
 
-        List<File> resultList = new ArrayList<File>();
+        String specificWritePath = writePath;
 
-        // get all the files from a directory
-        File[] fList = directory.listFiles();
+        for (File vulnFolder : vulnerabilityFolders){
+            for (File vulnFile : vulnFolder.listFiles()){
+                specificWritePath += vulnFolder.getName() + "\\" ;
+                try {
+                    if(!Files.exists(Paths.get(specificWritePath)))
+                    Files.createDirectory(Paths.get(specificWritePath));
 
-        resultList.addAll(Arrays.asList(fList));
-
-        for (File file : fList) {
-            if (file.isFile()) {
-                System.out.println(file.getAbsolutePath());
-
-                System.err.println(file.getParentFile().getName());
-            } else if (file.isDirectory()) {
-
-                resultList.addAll(listFiles(file.getAbsolutePath()));
+                    createByteCodeAndOpCode(getSolVersion(getAllSolVersion(vulnFile.getName(),vulnFolder.getPath() + "\\" )), FileUtils.getFileNameWithoutExtension(vulnFile), vulnFolder.getPath()+"\\", specificWritePath);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                specificWritePath = writePath;
             }
         }
-        System.out.println(resultList);
-        return resultList;
     }
 
     public boolean fileCanBeRead(String fileName, String path) {
@@ -211,7 +211,9 @@ public class SolcManager {
         return null;
     }
 
-    public void createByteCodeAndOpCode(String currentVersion, String currentContractAddress, String path, String path1) throws InterruptedException {
+    public void createByteCodeAndOpCode(String currentVersion, String currentContractAddress, String readPath, String writePath) throws InterruptedException {
+//        System.err.println("readPath => " + readPath);
+//        System.err.println("writePath =>" + writePath);
 
         try {
             System.out.println(currentContractAddress);
@@ -234,7 +236,7 @@ public class SolcManager {
 //            printResults(process);
 //            printErrors(process);
 
-            process = Runtime.getRuntime().exec("powershell /c solc --opcodes " + path + currentContractAddress + ".sol  > " + path1 + currentContractAddress + ".txt");
+            process = Runtime.getRuntime().exec("powershell /c solc --opcodes " + readPath + currentContractAddress + ".sol  > " + writePath + currentContractAddress + ".txt");
 
             process.waitFor();
             printResults(process);
