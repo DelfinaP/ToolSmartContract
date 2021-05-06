@@ -1,6 +1,7 @@
 import tool.CcsManager;
 import tool.SolcManager;
 import tool.SourceCodeManager;
+import utils.FileUtils;
 import utils.JsonUtils;
 
 
@@ -21,8 +22,9 @@ public class Main {
         //solcManager.listFilesForFolder(sourceCodesPath, opCodesPath);
         //solcManager.listFiles(sourceCodesVulnerablePath, opCodesVulnerablePath);
 
-        CcsManager ccsManager = new CcsManager();
+       CcsManager ccsManager = new CcsManager();
         ccsManager.listOpcodeFiles();
-        // ccsManager.readOpcodeOperation("0x102a796eb323c90ea233cf0cf454afa7d0441252.txt");
+
+        //ccsManager.readOpcodeOperation("0x102a796eb323c90ea233cf0cf454afa7d0441252.txt");
     }
 }

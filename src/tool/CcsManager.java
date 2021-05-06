@@ -6,7 +6,10 @@ import utils.JsonUtils;
 import javax.sound.midi.SysexMessage;
 import java.io.*;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CcsManager {
@@ -78,20 +81,24 @@ public class CcsManager {
             e.printStackTrace();
         }
 
-        createFileCcs(allOperationsSections, fileName);
+        try {
+            createFileCcs(allOperationsSections, fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName) {
-
+    private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName) throws IOException {
         String path = ccsPath + fileName.replaceFirst("[.][^.]+$", "") + ".ccs";
 
         String process = "";
+        String processProcAll = "";
 
         int b = 1;
 
-        ArrayList<String> procAllArray = new ArrayList<String>();
+        ArrayList<Integer> firstSectionProcess = new ArrayList<Integer>();
 
-        String procAll = "proc ALL = ";
+        String procAll = "proc ALL = p1 + ";
 
         for (int i = 0; i < arrayList.size(); i++) {
             for (int j = 0; j < arrayList.get(i).size(); j++) {
@@ -99,6 +106,9 @@ public class CcsManager {
                 if (j == arrayList.get(i).size() - 1) {
                     //System.out.println("p" + j + "=" + arrayList.get(i).get(j) + ".nil");
                     process += "proc p" + b + "=" + arrayList.get(i).get(j) + ".nil" + "\n" + "\n";
+                    System.out.println(b);
+                    firstSectionProcess.add(b);
+                    System.out.println(firstSectionProcess);
                     b++;
                 } else {
                     int z = b + 1;
@@ -106,19 +116,22 @@ public class CcsManager {
                     b++;
                 }
             }
-            procAllArray.add((String) arrayList.get(i).get(0));
         }
 
-        System.out.println(procAllArray);
+        for (int z = 0; z < firstSectionProcess.size()-1; z++) {
+            firstSectionProcess.set(z, firstSectionProcess.get(z) +1);
+            //System.out.println(firstSectionProcess.get(z));
 
-        for (int z = 0; z < procAllArray.size(); z++) {
-
-            if (z == procAllArray.size() - 1) {
-                procAll += procAllArray.get(z);
+            if (z == firstSectionProcess.size()-2){
+                processProcAll += "p" + firstSectionProcess.get(z);
             } else {
-                procAll += procAllArray.get(z) + " + ";
+                processProcAll += "p" + firstSectionProcess.get(z) + " + ";
             }
         }
+
+        procAll += processProcAll;
+        //System.out.println(procAll);
+
         FileUtils.writeFile(process, procAll, path);
     }
 }
