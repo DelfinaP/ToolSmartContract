@@ -15,34 +15,33 @@ import java.util.Scanner;
 public class CcsManager {
 
     String opCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "opcodes_path");
-    String ccsPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "ccs_path");
 
     //String fileName = "0x102a796eb323c90ea233cf0cf454afa7d0441252.txt";
 
     public CcsManager() {
     }
 
-    public void listOpcodeFiles() {
-        File folder = new File(opCodesPath);
+    public void listOpcodeFiles(String readPath, String writePath) {
+        File folder = new File(readPath);
 
         for (File fileEntry : folder.listFiles()) {
 
             if (fileEntry.isFile()) {
 
                 String fileName = fileEntry.getName();
-                readOpcodeOperation(fileName);
+                readOpcodeOperation(fileName, readPath, writePath);
             }
         }
     }
 
-    public void readOpcodeOperation(String fileName) {
+    public void readOpcodeOperation(String fileName, String readPath, String writePath) {
         String st = "";
         Boolean lineContainsOperations = false;
         ArrayList<ArrayList> allOperationsSections = new ArrayList<ArrayList>();
         ArrayList<String> allOperations = new ArrayList<String>();
 
         try {
-            File file = new File(opCodesPath + fileName);
+            File file = new File(readPath + fileName);
             Scanner sc = new Scanner(file);
 
             //BufferedReader br=new BufferedReader(new FileReader(file));
@@ -82,14 +81,14 @@ public class CcsManager {
         }
 
         try {
-            createFileCcs(allOperationsSections, fileName);
+            createFileCcs(allOperationsSections, fileName, writePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName) throws IOException {
-        String path = ccsPath + fileName.replaceFirst("[.][^.]+$", "") + ".ccs";
+    private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName, String writePath) throws IOException {
+        String path = writePath + fileName.replaceFirst("[.][^.]+$", "") + ".ccs";
 
         String process = "";
         String processProcAll = "";
@@ -106,9 +105,9 @@ public class CcsManager {
                 if (j == arrayList.get(i).size() - 1) {
                     //System.out.println("p" + j + "=" + arrayList.get(i).get(j) + ".nil");
                     process += "proc p" + b + "=" + arrayList.get(i).get(j) + ".nil" + "\n" + "\n";
-                    System.out.println(b);
+                    //System.out.println(b);
                     firstSectionProcess.add(b);
-                    System.out.println(firstSectionProcess);
+                    //System.out.println(firstSectionProcess);
                     b++;
                 } else {
                     int z = b + 1;
