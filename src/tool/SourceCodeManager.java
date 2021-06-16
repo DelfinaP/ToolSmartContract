@@ -5,9 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import library.org.json.*;
 import utils.FileUtils;
@@ -52,7 +49,7 @@ public class SourceCodeManager {
                     String jKey = getSourceCode(response);
 
                     String path = sourceCodesPath + contractAddressElement + ".sol";
-                    FileUtils.writeFileSol(contractAddressElement, jKey, path);
+                    FileUtils.writeFiles(contractAddressElement, jKey, path);
 
                 } else {
                     System.out.println("Errore");

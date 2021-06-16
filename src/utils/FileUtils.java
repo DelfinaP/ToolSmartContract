@@ -42,7 +42,7 @@ public class FileUtils {
         }
     }
 
-    public static void writeFileSol(String contractAddress, String jKey, String path) {
+    public static void writeFiles(String contractAddress, String jKey, String path) {
 
         File file = new File(path);
         FileWriter fw = null;

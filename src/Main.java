@@ -1,8 +1,11 @@
+import tool.BytecodeManager;
 import tool.CcsManager;
 import tool.SolcManager;
 import tool.SourceCodeManager;
 import utils.FileUtils;
 import utils.JsonUtils;
+
+import java.io.IOException;
 
 
 public class Main {
@@ -20,15 +23,22 @@ public class Main {
 
 
         //SourceCodeManager sourceCodeManager = new SourceCodeManager();
-        // sourceCodeManager.sendGetRequest();
+        //sourceCodeManager.sendGetRequest();
 
-        //SolcManager solcManager = new SolcManager();
-        //solcManager.listFilesForFolder(sourceCodesPath, opCodesPath);
-        //solcManager.listFiles(sourceCodesVulnerablePath, opCodesVulnerablePath);
+        BytecodeManager bytecodeManager = new BytecodeManager();
+        try {
+            bytecodeManager.sendGetRequest();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        CcsManager ccsManager = new CcsManager();
-        ccsManager.listOpcodeFiles(opCodesPath, ccsPath);
-        ccsManager.listOpcodeFiles(opCodesVulnerablePath, ccsVulnerablePath);
+//        SolcManager solcManager = new SolcManager();
+//        solcManager.listFilesForFolder(sourceCodesPath, opCodesPath);
+//        solcManager.listFiles(sourceCodesVulnerablePath, opCodesVulnerablePath);
+//
+//        CcsManager ccsManager = new CcsManager();
+//        ccsManager.listOpcodeFiles(opCodesPath, ccsPath);
+//        ccsManager.listOpcodeFiles(opCodesVulnerablePath, ccsVulnerablePath);
 
         //ccsManager.readOpcodeOperation("0x102a796eb323c90ea233cf0cf454afa7d0441252.txt");
     }

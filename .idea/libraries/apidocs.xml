@@ -2,7 +2,7 @@
   <library name="apidocs">
     <CLASSES />
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/@library/commons-lang3-3.12.0-bin.zip!/commons-lang3-3.12.0/apidocs" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-lang3-3.12.0-bin.zip!/commons-lang3-3.12.0/apidocs" />
     </JAVADOC>
     <SOURCES />
   </library>
