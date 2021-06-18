@@ -3,9 +3,12 @@
     "ApiKey" : "",
     "source_codes_path" : "..\\smart-contract\\src\\source_code\\",
     "bytecodes_path" : "..\\smart-contract\\src\\bytecode\\",
+    "etherSolve_json_path" : "..\\smart-contract\\src\\etherSolve_json\\",
     "opcodes_path" : "..\\smart-contract\\src\\opcode\\",
     "ccs_path" : "..\\smart-contract\\src\\ccs\\",
     "source_codes_vulnerable_path" : "..\\smart-contract\\src\\source_code_vulnerable",
+    "bytecodes_vulnerable_path" : "..\\smart-contract\\src\\bytecode_vulnerable\\",
+    "etherSolve_json_vulnerable_path" : "..\\smart-contract\\src\\etherSolve_json_vulnerable\\",
     "opcodes_vulnerable_path" : "..\\smart-contract\\src\\opcode_vulnerable\\",
     "ccs_vulnerable_path" : "..\\smart-contract\\src\\ccs_vulnerable"
   }
