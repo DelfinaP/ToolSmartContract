@@ -32,12 +32,14 @@ public class Main {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+//
+//        EtherSolve etherSolve = new EtherSolve();
+//        etherSolve.listFilesForFolder(bytecodesPath, etherSolveJsonPath);
+//        etherSolve.listFiles(bytecodesVulnerablePath, etherSolveJsonVulnerablePath);
 
-        EtherSolve etherSolve = new EtherSolve();
-        etherSolve.listFilesForFolder(bytecodesPath, etherSolveJsonPath);
-        etherSolve.listFiles(bytecodesVulnerablePath, etherSolveJsonVulnerablePath);
-
-
+        CcsManager ccsManager = new CcsManager();
+        //ccsManager.getOpcode();
+        ccsManager.fromStringToArray();
         //vecchie chiamate
         //        SolcManager solcManager = new SolcManager();
 //        solcManager.listFilesForFolder(sourceCodesPath, opCodesPath);

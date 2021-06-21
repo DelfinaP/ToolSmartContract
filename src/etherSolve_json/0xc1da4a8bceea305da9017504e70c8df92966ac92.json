@@ -1,0 +1,103 @@
+{
+  "name": "Analysis_2021-06-19_10-53-59",
+  "address": "",
+  "binarySource": "60806040526001600055600260015534801561001a57600080fd5b5061027a8061002a6000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c80636854171d14610046578063f3acae3a14610060578063f834130914610068575b600080fd5b61004e610072565b60408051918252519081900360200190f35b61004e610078565b61007061007e565b005b60005481565b60015481565b600b60009081556040805173eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee6024820152736b175474e89094c44da98b954eedeac495271d0f6044820152670de0b6b3a7640000606482810191909152608482015260a4808201939093528151808203909301835260c40181526020820180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff167f085e2c5b000000000000000000000000000000000000000000000000000000001781529051825173c586bef4a0992c495cf22e1aeee4e446cecdee0e939282918083835b6020831061019257805182527fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe09092019160209182019101610155565b6001836020036101000a0380198251168184511680821785525050505050509050019150506000604051808303816000865af19150503d80600081146101f4576040519150601f19603f3d011682016040523d82523d6000602084013e6101f9565b606091505b50506016600181905560005460408051918252602082019290925281517f9aa0a5ee181172acba4a8b7e3c24db463f4c218ff10a6ea1777f43817d25741493509081900390910190a156fea264697066735822122003dfda1121e4d98b9478255322029eba7b8bb919948e2827b52ab0b98dffc6eb64736f6c63430006060033",
+  "binaryHash": "c6d0b16f",
+  "isOnlyRuntime": true,
+  "metadata": "a264697066735822122003dfda1121e4d98b9478255322029eba7b8bb919948e2827b52ab0b98dffc6eb64736f6c63430006060033",
+  "solidityVersion": "0.6.6",
+  "constructorRemainingData": "",
+  "constructorCfg": {
+    "bytecode": "",
+    "remainingData": "",
+    "nodes": [],
+    "successors": [],
+    "buildReport": {
+      "directJumpTargetErrors": 0,
+      "orphanJumpTargetNullErrors": 0,
+      "orphanJumpTargetUnknownErrors": 0,
+      "loopDepthExceededErrors": 0,
+      "multipleRootNodesErrors": 0,
+      "stackExceededErrors": 0,
+      "blockLimitErrors": 0,
+      "criticalErrors": 0,
+      "errorLog": "",
+      "buildTimeMillis": 1624092839177
+    }
+  },
+  "runtimeCfg": {
+    "bytecode": "60806040526001600055600260015534801561001a57600080fd5b5061027a8061002a6000396000f3fe",
+    "remainingData": "fe608060405234801561001057600080fd5b50600436106100415760003560e01c80636854171d14610046578063f3acae3a14610060578063f834130914610068575b600080fd5b61004e610072565b60408051918252519081900360200190f35b61004e610078565b61007061007e565b005b60005481565b60015481565b600b60009081556040805173eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee6024820152736b175474e89094c44da98b954eedeac495271d0f6044820152670de0b6b3a7640000606482810191909152608482015260a4808201939093528151808203909301835260c40181526020820180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff167f085e2c5b000000000000000000000000000000000000000000000000000000001781529051825173c586bef4a0992c495cf22e1aeee4e446cecdee0e939282918083835b6020831061019257805182527fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe09092019160209182019101610155565b6001836020036101000a0380198251168184511680821785525050505050509050019150506000604051808303816000865af19150503d80600081146101f4576040519150601f19603f3d011682016040523d82523d6000602084013e6101f9565b606091505b50506016600181905560005460408051918252602082019290925281517f9aa0a5ee181172acba4a8b7e3c24db463f4c218ff10a6ea1777f43817d25741493509081900390910190a156fe",
+    "nodes": [
+      {
+        "offset": 0,
+        "length": 22,
+        "type": "dispatcher",
+        "stackBalance": 1,
+        "bytecodeHex": "60806040526001600055600260015534801561001a57",
+        "parsedOpcodes": "0: PUSH1 0x80\n2: PUSH1 0x40\n4: MSTORE\n5: PUSH1 0x01\n7: PUSH1 0x00\n9: SSTORE\n10: PUSH1 0x02\n12: PUSH1 0x01\n14: SSTORE\n15: CALLVALUE\n16: DUP1\n17: ISZERO\n18: PUSH2 0x001a\n21: JUMPI"
+      },
+      {
+        "offset": 22,
+        "length": 4,
+        "type": "dispatcher",
+        "stackBalance": 0,
+        "bytecodeHex": "600080fd",
+        "parsedOpcodes": "22: PUSH1 0x00\n24: DUP1\n25: REVERT"
+      },
+      {
+        "offset": 26,
+        "length": 15,
+        "type": "fallback",
+        "stackBalance": -1,
+        "bytecodeHex": "5b5061027a8061002a6000396000f3",
+        "parsedOpcodes": "26: JUMPDEST\n27: POP\n28: PUSH2 0x027a\n31: DUP1\n32: PUSH2 0x002a\n35: PUSH1 0x00\n37: CODECOPY\n38: PUSH1 0x00\n40: RETURN"
+      },
+      {
+        "offset": 41,
+        "length": 0,
+        "type": "exit",
+        "stackBalance": 0,
+        "bytecodeHex": "",
+        "parsedOpcodes": "41: EXIT BLOCK"
+      }
+    ],
+    "successors": [
+      {
+        "from": 0,
+        "to": [
+          22,
+          26
+        ]
+      },
+      {
+        "from": 22,
+        "to": [
+          41
+        ]
+      },
+      {
+        "from": 26,
+        "to": [
+          41
+        ]
+      },
+      {
+        "from": 41,
+        "to": []
+      }
+    ],
+    "buildReport": {
+      "directJumpTargetErrors": 0,
+      "orphanJumpTargetNullErrors": 0,
+      "orphanJumpTargetUnknownErrors": 0,
+      "loopDepthExceededErrors": 0,
+      "multipleRootNodesErrors": 0,
+      "stackExceededErrors": 0,
+      "blockLimitErrors": 0,
+      "criticalErrors": 0,
+      "errorLog": "",
+      "buildTimeMillis": 32
+    }
+  }
+}
