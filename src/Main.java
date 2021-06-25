@@ -1,3 +1,4 @@
+import org.json.simple.parser.ParseException;
 import tool.*;
 import utils.FileUtils;
 import utils.JsonUtils;
@@ -38,17 +39,9 @@ public class Main {
 //        etherSolve.listFiles(bytecodesVulnerablePath, etherSolveJsonVulnerablePath);
 
         CcsManager ccsManager = new CcsManager();
-        //ccsManager.getOpcode();
-        ccsManager.fromStringToArray();
-        //vecchie chiamate
-        //        SolcManager solcManager = new SolcManager();
-//        solcManager.listFilesForFolder(sourceCodesPath, opCodesPath);
-//        solcManager.listFiles(sourceCodesVulnerablePath, opCodesVulnerablePath);
-//
-//        CcsManager ccsManager = new CcsManager();
-//        ccsManager.listOpcodeFiles(opCodesPath, ccsPath);
-//        ccsManager.listOpcodeFiles(opCodesVulnerablePath, ccsVulnerablePath);
-
-        //ccsManager.readOpcodeOperation("0x102a796eb323c90ea233cf0cf454afa7d0441252.txt");
+        //ccsManager.listOpcodeFiles(etherSolveJsonPath, ccsPath);
+        ccsManager.listFiles(etherSolveJsonVulnerablePath, ccsVulnerablePath);
     }
+
 }
+

@@ -27,14 +27,13 @@ public class FileUtils {
         return fileName;
     }
 
-    public static void writeFile(String jKey, String addcash, String path) {
+    public static void writeFile(String jKey, String path) {
 
         File file = new File(path);
         FileWriter fw = null;
         try {
             fw = new FileWriter(file);
             fw.write(jKey);
-            fw.write(addcash);
             fw.flush();
             fw.close();
         } catch (IOException e) {

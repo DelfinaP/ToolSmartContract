@@ -4,57 +4,68 @@ package tool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import utils.JsonUtils;
+import org.json.simple.parser.ParseException;
+import utils.FileUtils;
 
+import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 import static java.lang.System.out;
 
 public class CcsManager {
 
-    String opCodesPath = JsonUtils.readValue("src/json/parameters.json", "parameters", "opcodes_path");
-
-    //String fileName = "0x102a796eb323c90ea233cf0cf454afa7d0441252.txt";
-
     public CcsManager() {
     }
 
+    public void listOpcodeFiles(String readPath, String writePath) {
+        File folder = new File(readPath);
 
-    public void getOpcode() {
+        for (File fileEntry : folder.listFiles()) {
 
-        String read = "..\\smart-contract\\src\\etherSolve_json\\0xff9315c2c4c0208edb5152f4c4ebec75e74010c5.json";
-        String key = "runtimeCfg";
+            if (fileEntry.isFile()) {
 
-        JSONParser parser = new JSONParser();
-        try {
-            Object obj = parser.parse(new FileReader(read));
-            JSONObject jsonObject = (JSONObject) obj;
-            //System.out.println(jsonObject);
-            JSONObject subjects = (JSONObject) jsonObject.get("runtimeCfg");
-            JSONArray nodes = (JSONArray) subjects.get("nodes");
+                String fileName = fileEntry.getName();
+                String fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(fileEntry);
 
-            Iterator iterator = nodes.iterator();
-            while (iterator.hasNext()) {
-
-                JSONObject parsedOpcode = (JSONObject) iterator.next();
-                //System.out.println(parsedOpcode.get("parsedOpcodes"));
-                String a = (String) parsedOpcode.get("parsedOpcodes");
-                fromStringToArray(a);
-
+                getNode(readPath + fileName, writePath + fileNameWithoutExtension + ".ccs");
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
+    //for file vulnerability
+    public void listFiles(String readPath, String writePath){
+        File directory = new File(readPath);
+        File[] vulnerabilityFolders = directory.listFiles();
 
-    public ArrayList<String> fromStringToArray(String stringParsedOpcode) {
+        String specificWritePath = writePath;
+
+        for (File vulnFolder : vulnerabilityFolders){
+            for (File vulnFile : vulnFolder.listFiles()){
+                String fileName = vulnFile.getName();
+                String fileNameWithoutExtension = FileUtils.getFileNameWithoutExtension(vulnFile);
+                specificWritePath += "\\" + vulnFolder.getName() + "\\" ;
+                //out.println(specificWritePath);
+                try {
+                    if(!Files.exists(Paths.get(specificWritePath)))
+                        Files.createDirectory(Paths.get(specificWritePath));
+                    getNode(vulnFolder.getPath()+"\\" + fileName, specificWritePath + fileNameWithoutExtension + ".ccs");
+
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                specificWritePath = writePath;
+            }
+        }
+    }
+
+    private ArrayList<String> fromStringToArray(String stringParsedOpcode) {
         //String stringParsedOpcode = "0: PUSH1 0x80\n2: PUSH1 0x40\n4: MSTORE\n5: CALLVALUE\n6: DUP1\n7: ISZERO\n8: PUSH3 0x000011\n12: JUMPI";
         ArrayList<String> arrayOperation = new ArrayList();
 
@@ -66,168 +77,140 @@ public class CcsManager {
                 c = s.substring(s.indexOf(":") + 1, s.indexOf("0x") - 1);
             }
             arrayOperation.add(c.trim());
-            out.println(arrayOperation);
+            //  out.println(arrayOperation);
         }
         return arrayOperation;
     }
+
+    public void getNode(String readPath, String writePath) {
+
+        JSONParser parser = new JSONParser();
+        //String readPath = "..\\smart-contract\\src\\etherSolve_json\\0xff9315c2c4c0208edb5152f4c4ebec75e74010c5.json";
+
+        Object obj = null;
+        try {
+            obj = parser.parse(new FileReader(readPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject jsonObject = (JSONObject) obj;
+        //System.out.println(jsonObject);
+        JSONObject subjects = (JSONObject) jsonObject.get("runtimeCfg");
+        JSONArray successors = (JSONArray) subjects.get("successors");
+        //out.println(successors);
+
+        JSONArray nodes = (JSONArray) subjects.get("nodes");
+        //out.println(nodes);
+
+        ListIterator<JSONObject> iteratorNodes = (ListIterator<JSONObject>) nodes.listIterator();
+        ListIterator<JSONObject> iteratorNodesAux = (ListIterator<JSONObject>) nodes.listIterator();
+        ListIterator<JSONObject> iteratorNodesAux1 = (ListIterator<JSONObject>) nodes.listIterator();
+        ListIterator<JSONObject> iteratorFrom = (ListIterator<JSONObject>) successors.listIterator();
+
+        ArrayList<ArrayList> allOpcodes = new ArrayList<>();
+        ArrayList<String> allOpcodesTogheter = new ArrayList<>();
+
+        int processNumber = 0;
+
+        for (int i = 0; i < nodes.size(); i++) {
+
+            JSONObject currentNode = (JSONObject) nodes.get(i);
+            ArrayList<String> opcodes = fromStringToArray(currentNode.get("parsedOpcodes").toString());
+
+            for (int j = 0; j < opcodes.size(); j++) {
+
+                if (opcodes.get(j).contains("EXIT BLOCK")) {
+                    opcodes.set(j, opcodes.get(j).replace(" ", ""));
+                    //out.println(opcodes.get(j));
+                }
+
+                opcodes.set(j, opcodes.get(j) + "-p" + ((processNumber++) + 1));
+                //out.println(opcodes.get(j));
+                allOpcodesTogheter.add(opcodes.get(j));
+            }
+
+            allOpcodes.add(opcodes);
+        }
+
+        //out.println(allOpcodes);
+        // out.println(allOpcodes.get(0));
+
+        String allp = "";
+        String add = "";
+        int pNumbAux = 0;
+        for (int i = 0; i < nodes.size(); i++) {
+
+            JSONObject currentNode = (JSONObject) nodes.get(i);
+            JSONObject currentSuccessor = (JSONObject) successors.get(i);
+
+            //cercare offset
+            if (currentNode.get("offset").equals(currentSuccessor.get("from"))) {
+
+                JSONObject nodoCheSalta = currentNode;
+                int index = i;
+
+                //prendere salti
+                JSONArray jumps = (JSONArray) currentSuccessor.get("to");
+
+                //cerac dove saltare
+                ArrayList<String> jumpAt = new ArrayList<>();
+
+                String cmd = "";
+                for (int o = 0; o < allOpcodes.get(i).size(); o++) {
+                    String[] pn = allOpcodes.get(i).get(o).toString().split("-p");
+                    pNumbAux++;
+
+                    if (o < allOpcodes.get(i).size() - 1) {
+
+                        allp += "proc p" + pNumbAux + "=" + pn[0] + ".p" + (pNumbAux + 1) + "\n";
+                    } else {
+                        allp += "proc p" + pNumbAux + "=" + pn[0];
+                    }
+                    cmd = pn[0];
+
+                }
+
+                for (int j = 0; j < jumps.size(); j++) {
+                    for (int k = 0; k < nodes.size(); k++) {
+
+                        JSONObject currentNodeAux = (JSONObject) nodes.get(k);
+
+                        if (currentNodeAux.get("offset").equals(jumps.get(j))) {
+
+                            //  out.println(allOpcodes.get(k).get(0));
+                            //  out.println("salta");
+                            String[] pnumbc = allOpcodes.get(k).get(0).toString().split("-p");
+                            jumpAt.add(pnumbc[1]);
+
+                            if (jumps.size() == 1) {
+                                add += ".p" + pnumbc[1] + "\n";
+                            } else {
+                                if (j < jumps.size() - 1) {
+                                    add += ".p" + pnumbc[1];
+                                } else {
+                                    add += " + " + cmd + ".p" + pnumbc[1] + "\n";
+                                }
+                            }
+                            allp += add;
+                            add = "";
+                        }
+                    }
+                }
+            }
+            // out.println(add);
+        }
+        allp += ".nil";
+
+        //out.println(allp);
+
+        FileUtils.writeFile(allp, writePath);
+    }
 }
 
-//    private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName, String writePath) throws IOException {
-//        String path = writePath + fileName.replaceFirst("[.][^.]+$", "") + ".ccs";
-//
-//        String process = "";
-//
-//        int b = 1;
-//
-//        ArrayList<Integer> firstSectionProcess = new ArrayList<Integer>();
-//
-//        for (int i = 0; i < arrayList.size(); i++) {
-//            for (int j = 0; j < arrayList.get(i).size(); j++) {
-//
-//                if (j == arrayList.get(i).size() - 1) {
-//                    //System.out.println("p" + j + "=" + arrayList.get(i).get(j) + ".nil");
-//                    process += "proc p" + b + "=" + arrayList.get(i).get(j) + ".nil" + "\n" + "\n";
-//                    //System.out.println(b);
-//                    firstSectionProcess.add(b);
-//                    //System.out.println(firstSectionProcess);
-//                    b++;
-//                } else {
-//                    int z = b + 1;
-//                    process += "proc p" + b + "=" + arrayList.get(i).get(j) + ".p" + z + "\n";
-//                    b++;
-//                }
-//            }
-//        }
-//
-//        for (int z = 0; z < firstSectionProcess.size()-1; z++) {
-//            firstSectionProcess.set(z, firstSectionProcess.get(z) +1);
-//            //System.out.println(firstSectionProcess.get(z));
-//
-//            if (z == firstSectionProcess.size()-2){
-//                processProcAll += "p" + firstSectionProcess.get(z);
-//            } else {
-//                processProcAll += "p" + firstSectionProcess.get(z) + " + ";
-//            }
-//        }
-//
-//        procAll += processProcAll;
-//        //System.out.println(procAll);
-//
-//        FileUtils.writeFile(process, procAll, path);
-//    }
-//    }
 
-//    public void listOpcodeFiles(String readPath, String writePath) {
-//        File folder = new File(readPath);
-//
-//        for (File fileEntry : folder.listFiles()) {
-//
-//            if (fileEntry.isFile()) {
-//
-//                String fileName = fileEntry.getName();
-//                readOpcodeOperation(fileName, readPath, writePath);
-//            }
-//        }
-//    }
-//
-//    public void readOpcodeOperation(String fileName, String readPath, String writePath) {
-//        String st = "";
-//        Boolean lineContainsOperations = false;
-//        ArrayList<ArrayList> allOperationsSections = new ArrayList<ArrayList>();
-//        ArrayList<String> allOperations = new ArrayList<String>();
-//
-//        try {
-//            File file = new File(readPath + fileName);
-//            Scanner sc = new Scanner(file);
-//
-//            //BufferedReader br=new BufferedReader(new FileReader(file));
-//            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-16"));
-//
-//            while ((st = br.readLine()) != null) {
-//
-//                if (lineContainsOperations == true && st.length() != 0) {
-//                    String[] operationsSplit = st.split(" ");
-//
-//                    for (String operation : operationsSplit) {
-//                        if (!operation.contains("0x")) {
-//                            allOperations.add(operation);
-//                        }
-//                    }
-//                    allOperationsSections.add(new ArrayList<>(allOperations));
-//                    allOperations.clear();
-//                }
-//
-//                if (st.contains("Opcodes:")) {
-//                    lineContainsOperations = true;
-//                } else {
-//                    lineContainsOperations = false;
-//                }
-//            }
-//
-////                System.out.println(allOperations);
-//            for (int i = 0; i < allOperationsSections.size(); i++) {
-//                //System.out.println(allOperationsSections.get(i));
-//            }
-//
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            createFileCcs(allOperationsSections, fileName, writePath);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void createFileCcs(ArrayList<ArrayList> arrayList, String fileName, String writePath) throws IOException {
-//        String path = writePath + fileName.replaceFirst("[.][^.]+$", "") + ".ccs";
-//
-//        String process = "";
-//        String processProcAll = "";
-//
-//        int b = 1;
-//
-//        ArrayList<Integer> firstSectionProcess = new ArrayList<Integer>();
-//
-//        String procAll = "proc ALL = p1 + ";
-//
-//        for (int i = 0; i < arrayList.size(); i++) {
-//            for (int j = 0; j < arrayList.get(i).size(); j++) {
-//
-//                if (j == arrayList.get(i).size() - 1) {
-//                    //System.out.println("p" + j + "=" + arrayList.get(i).get(j) + ".nil");
-//                    process += "proc p" + b + "=" + arrayList.get(i).get(j) + ".nil" + "\n" + "\n";
-//                    //System.out.println(b);
-//                    firstSectionProcess.add(b);
-//                    //System.out.println(firstSectionProcess);
-//                    b++;
-//                } else {
-//                    int z = b + 1;
-//                    process += "proc p" + b + "=" + arrayList.get(i).get(j) + ".p" + z + "\n";
-//                    b++;
-//                }
-//            }
-//        }
-//
-//        for (int z = 0; z < firstSectionProcess.size()-1; z++) {
-//            firstSectionProcess.set(z, firstSectionProcess.get(z) +1);
-//            //System.out.println(firstSectionProcess.get(z));
-//
-//            if (z == firstSectionProcess.size()-2){
-//                processProcAll += "p" + firstSectionProcess.get(z);
-//            } else {
-//                processProcAll += "p" + firstSectionProcess.get(z) + " + ";
-//            }
-//        }
-//
-//        procAll += processProcAll;
-//        //System.out.println(procAll);
-//
-//        FileUtils.writeFile(process, procAll, path);
-//    }
+
 
 
