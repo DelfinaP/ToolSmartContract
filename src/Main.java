@@ -24,22 +24,22 @@ public class Main {
         String ccsVulnerablePath = JsonUtils.readValue("src/json/parameters.json", "parameters", "ccs_vulnerable_path");
 
 
-//        SourceCodeManager sourceCodeManager = new SourceCodeManager();
-//        sourceCodeManager.sendGetRequest();
+        SourceCodeManager sourceCodeManager = new SourceCodeManager();
+        sourceCodeManager.sendGetRequest();
 
-//        BytecodeManager bytecodeManager = new BytecodeManager();
-//        try {
-//            bytecodeManager.sendGetRequest();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        EtherSolve etherSolve = new EtherSolve();
-//        etherSolve.listFilesForFolder(bytecodesPath, etherSolveJsonPath);
-//        etherSolve.listFiles(bytecodesVulnerablePath, etherSolveJsonVulnerablePath);
+        BytecodeManager bytecodeManager = new BytecodeManager();
+        try {
+            bytecodeManager.sendGetRequest();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        EtherSolve etherSolve = new EtherSolve();
+        etherSolve.listFilesForFolder(bytecodesPath, etherSolveJsonPath);
+        etherSolve.listFiles(bytecodesVulnerablePath, etherSolveJsonVulnerablePath);
 
         CcsManager ccsManager = new CcsManager();
-        //ccsManager.listOpcodeFiles(etherSolveJsonPath, ccsPath);
+        ccsManager.listOpcodeFiles(etherSolveJsonPath, ccsPath);
         ccsManager.listFiles(etherSolveJsonVulnerablePath, ccsVulnerablePath);
     }
 

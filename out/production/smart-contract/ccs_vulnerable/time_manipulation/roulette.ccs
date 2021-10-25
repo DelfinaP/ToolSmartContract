@@ -1,0 +1,11 @@
+proc p1=PUSH1.p2
+proc p2=PUSH1.p3
+proc p3=MSTORE.p4
+proc p4=PUSH2.p5
+proc p5=DUP1.p6
+proc p6=PUSH2.p7
+proc p7=PUSH1.p8
+proc p8=CODECOPY.p9
+proc p9=PUSH1.p10
+proc p10=RETURN.p11
+proc p11=EXITBLOCK.nil
